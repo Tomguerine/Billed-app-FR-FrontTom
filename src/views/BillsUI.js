@@ -17,14 +17,25 @@ const row = (bill) => {
       </td>
     </tr>
     `)
-  }
+}
+
+
+// ✅ MODIFICATION EFFECTUÉE PAR L'ÉTUDIANT :
+// Le tableau affichait les factures sans ordre spécifique, ce qui faisait échouer le test.
+// J’ai ajouté un tri par date décroissante (du plus récent au plus ancien) pour que
+// l’affichage corresponde à ce que le test attend.
 
 const rows = (data) => {
-  return (data && data.length) ? data.map(bill => row(bill)).join("") : ""
+  if (!data || !data.length) return ""
+
+  // Tri décroissant : du plus récent au plus ancien
+  const sortedData = data.sort((a, b) => new Date(b.date) - new Date(a.date))
+
+  return sortedData.map(bill => row(bill)).join("")
 }
 
 export default ({ data: bills, loading, error }) => {
-  
+
   const modal = () => (`
     <div class="modal fade" id="modaleFile" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -47,7 +58,7 @@ export default ({ data: bills, loading, error }) => {
   } else if (error) {
     return ErrorPage(error)
   }
-  
+
   return (`
     <div class='layout'>
       ${VerticalLayout(120)}
